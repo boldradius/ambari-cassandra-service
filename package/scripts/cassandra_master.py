@@ -52,7 +52,12 @@ class Cassandra_Master(Script):
     def status(self, env):
         import params
         env.set_params(params)
-        status_cmd = format("service cassandra status")
+        status_cmd = format("""
+            if hash systemctl 2>/dev/null; then
+              systemctl status cassandra
+            else
+              service cassandra status
+            fi""")
         Execute(status_cmd)
         print 'Status of the Master'
     
